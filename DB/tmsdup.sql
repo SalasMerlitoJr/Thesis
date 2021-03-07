@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 17, 2021 at 03:36 PM
+-- Generation Time: Mar 07, 2021 at 12:30 PM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 7.4.13
 
@@ -24,131 +24,176 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbl_users`
+-- Table structure for table `group_members_tbl`
 --
 
-CREATE TABLE `tbl_users` (
-  `id` int(11) NOT NULL,
-  `name` varchar(250) NOT NULL,
-  `login` varchar(250) NOT NULL,
-  `password` varchar(250) NOT NULL,
-  `gender` text NOT NULL,
-  `phone` int(25) NOT NULL,
-  `role` int(11) DEFAULT NULL,
-  `section` text DEFAULT NULL,
-  `status` int(11) NOT NULL
+CREATE TABLE `group_members_tbl` (
+  `group_members_id` int(11) NOT NULL,
+  `team` int(255) NOT NULL,
+  `member_id` int(255) NOT NULL,
+  `role` varchar(255) NOT NULL,
+  `gro_mem_status` int(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `tbl_users`
---
-
-INSERT INTO `tbl_users` (`id`, `name`, `login`, `password`, `gender`, `phone`, `role`, `section`, `status`) VALUES
-(1, 'Admin', 'admin@admin.com', '202cb962ac59075b964b07152d234b70', 'male', 2147483647, 1, '', 0),
-(2, 'Student', 'user@user.com', '202cb962ac59075b964b07152d234b70', 'male', 2147483647, 0, '', 0),
-(3, 'Faculty', 'faculty@faculty.com', '202cb962ac59075b964b07152d234b70', 'male', 2147483647, 2, '', 0),
-(4, 'Secretary', 'secretary@secretary.com', '202cb962ac59075b964b07152d234b70', 'male', 2147483647, 3, '', 0),
-(5, ' Faculty One ', 'f1@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', 'male', 505984589, 2, NULL, 0),
-(6, 'Faculty Two', 'f2@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', 'female', 8458375, 2, NULL, 0),
-(7, 'Faculty Three', 'f3@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', 'male', 456294857, 2, NULL, 0),
-(8, 'Faculty Four', 'f4@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', 'female', 47526459, 2, NULL, 0),
-(9, 'Faculty Five', 'f5@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', 'male', 9468094, 2, NULL, 0),
-(10, 'Faculty Six', 'f6@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', 'female', 92345783, 2, NULL, 0),
-(11, 'Faculty Seven', 'f7@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', 'male', 3787245, 2, NULL, 0),
-(12, 'Faculty Eight', 'f8@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', 'female', 456247592, 2, NULL, 0),
-(13, 'Gedeon B.  Lumbayan ', 'gedeon@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', '', 0, 0, 'R3', 0),
-(14, 'James Joshua Balbon ', 'jebjeb@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', '', 0, 0, 'R3', 0),
-(15, 'Merlito Salas', 'paps@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', '', 0, 0, 'R3', 0),
-(16, 'Roderick Agol', 'kiking@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', '', 0, 0, 'R3', 0),
-(17, 'Bryan Sabejon', 'brybry@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', '', 0, 0, 'R4', 0),
-(18, 'Hanz Valmoria', 'hanz@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', '', 0, 0, 'R4', 0),
-(19, 'Justin Libres', 'jus@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', '', 0, 0, 'R4', 0),
-(20, 'Diamond Unos', 'diamond@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', '', 0, 0, 'R4', 0);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- Table structure for table `group_tbl`
 --
 
-CREATE TABLE `users` (
-  `id` int(11) NOT NULL,
+CREATE TABLE `group_tbl` (
+  `group_id` int(255) NOT NULL,
+  `team_id` int(255) NOT NULL,
+  `team_adviser` int(255) NOT NULL,
+  `initial_title` varchar(255) NOT NULL,
+  `initial_title_category` varchar(255) NOT NULL,
+  `gro_status` int(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `thesis_docu_tbl`
+--
+
+CREATE TABLE `thesis_docu_tbl` (
+  `thesis_docu_id` int(255) NOT NULL,
+  `team_id` int(255) NOT NULL,
+  `thesis_title` varchar(255) NOT NULL,
+  `thesis_category` varchar(255) NOT NULL,
+  `th_date_started` varchar(255) NOT NULL,
+  `th_date_ended` varchar(255) NOT NULL,
+  `th_doc_status` int(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users_tbl`
+--
+
+CREATE TABLE `users_tbl` (
+  `user_id` int(11) NOT NULL,
   `name` varchar(250) NOT NULL,
-  `login` varchar(250) NOT NULL,
-  `password` varchar(250) NOT NULL,
-  `role` int(11) DEFAULT NULL,
-  `section` text DEFAULT NULL
+  `email` varchar(250) NOT NULL,
+  `userpassword` varchar(250) NOT NULL,
+  `gender` text NOT NULL,
+  `phone` int(25) NOT NULL,
+  `type` varchar(250) DEFAULT NULL,
+  `section` text DEFAULT NULL,
+  `status` int(11) NOT NULL,
+  `del_stat` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `users`
+-- Dumping data for table `users_tbl`
 --
 
-INSERT INTO `users` (`id`, `name`, `login`, `password`, `role`, `section`) VALUES
-(1, 'Admin', 'admin@admin.com', '202cb962ac59075b964b07152d234b70', 1, ''),
-(2, 'Student', 'user@user.com', '202cb962ac59075b964b07152d234b70', 0, ''),
-(3, 'Faculty', 'faculty@faculty.com', '202cb962ac59075b964b07152d234b70', 2, ''),
-(4, 'Secretary', 'secretary@secretary.com', '202cb962ac59075b964b07152d234b70', 3, ''),
-(5, 'Miguel ', 'gg@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', 0, 'R3'),
-(6, 'Sasha ', 'gg@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', 0, 'R4'),
-(7, 'Chris', 'gg@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', 0, 'R5'),
-(8, 'Rapido', 'gg@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', 0, 'R2'),
-(9, 'Miguel c1 ', 'gg1@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', 0, 'R3'),
-(10, 'Sasha c2 ', 'gg2@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', 0, 'R4'),
-(11, 'Chris c3', 'gg3@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', 0, 'R5'),
-(12, 'Rapido c4', 'gg4@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', 0, 'R2'),
-(13, 'Dulce c5', 'gg5@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', 0, 'R3'),
-(14, 'ako c6', 'gg6@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', 0, 'R5'),
-(15, 'ikaw c7', 'gg7@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', 0, 'R2'),
-(16, 'siya c8', 'gg8@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', 0, 'R3'),
-(95, 'Gedeon B.  Lumbayan ', 'gedeon@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', 0, 'R3'),
-(96, 'James Joshua Balbon ', 'jebjeb@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', 0, 'R3'),
-(97, 'Merlito Salas', 'paps@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', 0, 'R3'),
-(98, 'Roderick Agol', 'kiking@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', 0, 'R3'),
-(99, 'Bryan Sabejon', 'brybry@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', 0, 'R4'),
-(100, 'Hanz Valmoria', 'hanz@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', 0, 'R4'),
-(101, 'Justin Libres', 'jus@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', 0, 'R4'),
-(102, 'Diamond Unos', 'diamond@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', 0, 'R4'),
-(103, 'Gedeon B.  Lumbayan ', 'gedeon@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', 0, 'R3'),
-(104, 'James Joshua Balbon ', 'jebjeb@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', 0, 'R3'),
-(105, 'Merlito Salas', 'paps@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', 0, 'R3'),
-(106, 'Roderick Agol', 'kiking@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', 0, 'R3'),
-(107, 'Bryan Sabejon', 'brybry@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', 0, 'R4'),
-(108, 'Hanz Valmoria', 'hanz@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', 0, 'R4'),
-(109, 'Justin Libres', 'jus@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', 0, 'R4'),
-(110, 'Diamond Unos', 'diamond@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', 0, 'R4');
+INSERT INTO `users_tbl` (`user_id`, `name`, `email`, `userpassword`, `gender`, `phone`, `type`, `section`, `status`, `del_stat`) VALUES
+(1, 'Faculty', 'faculty@faculty.com', '202cb962ac59075b964b07152d234b70', 'male', 2147483647, 'faculty', '', 0, 0),
+(2, 'Secretary', 'secretary@secretary.com', '202cb962ac59075b964b07152d234b70', 'male', 2147483647, 'secretary', '', 0, 0),
+(3, 'Admin', 'admin@admin.com', '202cb962ac59075b964b07152d234b70', 'male', 2147483647, 'admin', '', 0, 0),
+(4, 'Gedeon B.  Lumbayan ', 'gedeon@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', '', 0, 'student', 'R3', 0, 0),
+(5, 'James Joshua Balbon ', 'jebjeb@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', '', 0, 'student', 'R3', 0, 0),
+(6, 'Merlito Salas', 'paps@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', '', 0, 'student', 'R3', 0, 0),
+(7, 'Roderick Agol', 'kiking@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', '', 0, 'student', 'R3', 0, 0),
+(8, 'Bryan Sabejon', 'brybry@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', '', 0, 'student', 'R4', 0, 0),
+(9, 'Hanz Valmoria', 'hanz@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', '', 0, 'student', 'R4', 0, 0),
+(10, 'Justin Libres', 'jus@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', '', 0, 'student', 'R4', 0, 0),
+(11, 'Diamond Unos', 'diamond@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', '', 0, 'student', 'R4', 0, 0),
+(12, 'Junnabelle Labadan ', 'junna@gg.como', '827ccb0eea8a706c4c34a16891f84e7b', '', 0, 'student', 'R4', 0, 0),
+(13, 'Noel Angelou Echem', 'echem@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', '', 0, 'student', 'R4', 0, 0),
+(14, 'Jayson Bilar', 'son@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', '', 0, 'student', 'R4', 0, 0),
+(15, 'Linin Che Bagani', 'acao@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', '', 0, 'student', 'R4', 0, 0),
+(16, ' Faculty One ', 'f1@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', 'male', 505984589, 'faculty', NULL, 0, 0),
+(17, 'Faculty Two', 'f2@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', 'female', 8458375, 'faculty', NULL, 0, 0),
+(18, 'Faculty Three', 'f3@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', 'male', 456294857, 'faculty', NULL, 0, 0),
+(19, 'Faculty Four', 'f4@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', 'female', 47526459, 'faculty', NULL, 0, 0),
+(20, 'Faculty Five', 'f5@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', 'male', 9468094, 'faculty', NULL, 0, 0),
+(21, 'Faculty Six', 'f6@gg.com', '827ccb0eea8a706c4c34a16891f84e7b', 'female', 92345783, 'faculty', NULL, 0, 0);
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `tbl_users`
+-- Indexes for table `group_members_tbl`
 --
-ALTER TABLE `tbl_users`
-  ADD PRIMARY KEY (`id`);
+ALTER TABLE `group_members_tbl`
+  ADD PRIMARY KEY (`group_members_id`),
+  ADD KEY `team` (`team`);
 
 --
--- Indexes for table `users`
+-- Indexes for table `group_tbl`
 --
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`);
+ALTER TABLE `group_tbl`
+  ADD PRIMARY KEY (`group_id`),
+  ADD KEY `team_id` (`team_id`),
+  ADD KEY `team_adviser` (`team_adviser`);
+
+--
+-- Indexes for table `thesis_docu_tbl`
+--
+ALTER TABLE `thesis_docu_tbl`
+  ADD PRIMARY KEY (`thesis_docu_id`),
+  ADD KEY `team_id` (`team_id`);
+
+--
+-- Indexes for table `users_tbl`
+--
+ALTER TABLE `users_tbl`
+  ADD PRIMARY KEY (`user_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT for table `tbl_users`
+-- AUTO_INCREMENT for table `group_members_tbl`
 --
-ALTER TABLE `tbl_users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+ALTER TABLE `group_members_tbl`
+  MODIFY `group_members_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT for table `users`
+-- AUTO_INCREMENT for table `group_tbl`
 --
-ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=111;
+ALTER TABLE `group_tbl`
+  MODIFY `group_id` int(255) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `thesis_docu_tbl`
+--
+ALTER TABLE `thesis_docu_tbl`
+  MODIFY `thesis_docu_id` int(255) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `users_tbl`
+--
+ALTER TABLE `users_tbl`
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `group_members_tbl`
+--
+ALTER TABLE `group_members_tbl`
+  ADD CONSTRAINT `group_members_tbl_ibfk_1` FOREIGN KEY (`team`) REFERENCES `users_tbl` (`user_id`);
+
+--
+-- Constraints for table `group_tbl`
+--
+ALTER TABLE `group_tbl`
+  ADD CONSTRAINT `group_tbl_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `users_tbl` (`user_id`),
+  ADD CONSTRAINT `group_tbl_ibfk_2` FOREIGN KEY (`team_adviser`) REFERENCES `users_tbl` (`user_id`);
+
+--
+-- Constraints for table `thesis_docu_tbl`
+--
+ALTER TABLE `thesis_docu_tbl`
+  ADD CONSTRAINT `thesis_docu_tbl_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `users_tbl` (`user_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

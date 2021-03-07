@@ -141,10 +141,10 @@
                         <div class="stat-panel text-center">
 <?php 
 //$sql ="SELECT id from users where role = 0";
-$sql ="SELECT id from tbl_users where role = 0";
+$sql ="SELECT user_id from users_tbl where type = 'student'";
 $records = mysqli_query($conn, $sql);
 $rowcount = mysqli_num_rows($records);
-?>                        
+?>                      
                           <div class="stat-panel-number h1 "><?php echo $rowcount; ?></div>
                           <div class="stat-panel-title text-uppercase">Total Proponents</div>
                         </div>
@@ -158,7 +158,7 @@ $rowcount = mysqli_num_rows($records);
                         <div class="stat-panel text-center">
 <?php 
 //$sql ="SELECT id from users where role = 2";
-$sql ="SELECT id from tbl_users where role = 2";
+$sql ="SELECT user_id from users_tbl where type = 'faculty'";
 $records = mysqli_query($conn, $sql);
 $rowcount = mysqli_num_rows($records);
 ?>

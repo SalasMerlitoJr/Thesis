@@ -28,6 +28,25 @@
   <!-- Admin Stye -->
   <link rel="stylesheet" href="../student_css/style.css">
 
+  <style>
+    .errorWrap {
+        padding: 10px;
+        margin: 0 0 20px 0;
+      background: #dd3d36;
+      color:#fff;
+        -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+        box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+    }
+    .succWrap{
+        padding: 10px;
+        margin: 0 0 20px 0;
+      background: #5cb85c;
+      color:#fff;
+        -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+        box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+    }
+  </style>
+
 </head>
 
 <body>
@@ -132,24 +151,51 @@
 
             <center><h2 class="page-title">Account Management Page</h2></center>
             
+            <?php 
+            
+            include '../../../includes/connect.php';
+            $msg = null;
+
+              if(isset($_POST['edit_password'])){
+                $password=md5($_POST['password']);
+                $fafa=$_SESSION["email"];
+                $sql="UPDATE users_tbl SET userpassword='$password' where email = '$fafa' and userpassword != '$password' ";
+                //$sql = " password != '$password' begin UPDATE tbl_users SET password='$password' where login = '$fafa'";
+                $stmt = $conn->prepare($sql);
+                $stmt->execute();
+                $_SESSION['userpassword'] = md5($_POST['password']);
+
+                $msg="Password Changed Sucessfully";
+                
+            }
+              
+            ?>
+
+          <div class="panel panel-default">
+        <?php  if($msg){?><div class="succWrap" id="msgshow"><center><?php echo htmlentities($msg); ?></center> </div><?php }?>
+
             <div class="panel-body"></div>
             <form method="post" class="form-horizontal" enctype="multipart/form-data">
 
               <div class="form-group">
-                <label class="col-sm-2 control-label">Full Name<span style="color:red">*</span></label>
+                  <center> <strong style="font-size: 2em"><?php $ufunc->UserName(); ?></strong></center>
+                </div>
+
+              <div class="form-group">
+                <center> <strong style="font-size: 2em"><?php $ufunc->email(); ?></strong></center>
+              </div>
+
+              <div class="form-group">
+                <center>  <label class="col-sm-2 control-label">Password<span style="color:red">*</span></label></center>
                   <div class="col-sm-4">
-                    <input type="text" name="name" class="form-control" required value="<?php $ufunc->UserName(); ?>">
-                  </div>
-                <label class="col-sm-2 control-label">Email<span style="color:red">*</span></label>
-                  <div class="col-sm-4">
-                    <input type="email" name="email" class="form-control" required value="<?php $ufunc->email(); ?>">
+                    <input type="text" name="password" class="form-control" placeholder = "edit password" >
                   </div>
               </div>
 
 
               <div class="form-group">
                 <div class="col-sm-8 col-sm-offset-2">
-                  <button class="btn btn-primary" name="submit" type="submit">Save Changes</button>
+                  <button class="btn btn-primary" action = "editSucess.php" name="edit_password" type="submit">Update</button>
                 </div>
               </div>
             </form>
@@ -174,6 +220,13 @@
   <script src="../student_js/fileinput.js"></script>
   <script src="../student_js/chartData.js"></script>
   <script src="../student_js/main.js"></script>
+  <script type="text/javascript">
+         $(document).ready(function () {          
+          setTimeout(function() {
+            $('.succWrap').slideUp("slow");
+          }, 1500);
+          });
+  </script>
 
 </body>
 </html>

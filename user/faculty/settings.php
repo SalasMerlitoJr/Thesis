@@ -5,7 +5,7 @@ $ufunc = new UserFunctions;
 $chss = new Login;
 $chss->SessionCheck();
 //Check user role is true
-if (!isset($_SESSION['login']) || $_SESSION['role'] != "2") {
+if (!isset($_SESSION['email']) || $_SESSION['type'] != 'faculty') {
   header("Location:../../includes/logout.php");
 }
 ?>

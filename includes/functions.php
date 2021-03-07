@@ -4,17 +4,17 @@ class Login{
     session_start(); // Starting Session
     $error = ''; // Variable To Store Error Message
     if (isset($_POST['submit'])){
-      if (empty($_POST['login']) || empty($_POST['password'])){
+      if (empty($_POST['email']) || empty($_POST['password'])){
         $error = "Username or Password is invalid";
       }
       else{
         include 'connect.php';
         // Define $username and $password
-        $username = $_POST['login'];
+        $email = $_POST['email'];
         $password = md5($_POST['password']);
         // SQL query to fetch information of registerd users and finds user match.
         
-        $query = "SELECT login, password FROM tbl_users WHERE login=? AND password=? LIMIT 1";
+        $query = "SELECT email, userpassword FROM users_tbl WHERE email='$email' AND userpassword='$password' ";
 
         // To protect MySQL injection for Security purpose
         $stmt = $conn->prepare($query);
@@ -23,17 +23,9 @@ class Login{
         $stmt->bind_result($username, $password);
         $stmt->store_result();
         if($stmt->fetch()) { //fetching the contents of the row 
-          $_SESSION['login'] = $username; // Initializing Session
+          $_SESSION['email'] = $username; // Initializing Session
         }
-        //-----------------------------------------------------------
-        /*if($stmt->rowCount() > 0){
-          $_SESSION['keking_login']=$_POST['login'];
-          echo "<script type='text/javascript'> document.location = '../user/student/'; </script>";
-        } 
-        else{
-          echo "<script>alert('Invalid Details Or Account Not Confirmed');</script>";
-        }*/
-        //-----------------------------------------------------------
+        
       mysqli_close($conn); // Closing Connection
       }
     } 
@@ -42,43 +34,47 @@ class Login{
     global $conn;
     session_start();// Starting Session
     // Storing Session
-    $user_check = $_SESSION['login'];
+    $user_check = $_SESSION['email'];
     // SQL Query To Fetch Complete Information Of User
-    //$query = "SELECT * FROM users WHERE login = '$user_check'";
-    $query = "SELECT * FROM tbl_users WHERE login = '$user_check'";
+    $query = "SELECT * FROM users_tbl WHERE email = '$user_check';";
     
     $ses_sql = mysqli_query($conn, $query);
     $row = mysqli_fetch_assoc($ses_sql);
-    $_SESSION["id"] = $row["id"];
+    $_SESSION["user_id"] = $row["user_id"];
     $_SESSION["name"] = $row["name"];
-    $_SESSION["role"] = $row["role"];
+    $_SESSION["type"] = $row["type"];
     //keking addition
-    $_SESSION["password"] = $row["password"];
+    $_SESSION["userpassword"] = $row["userpassword"];
+    $_SESSION["status"] = $row["status"];
+    
+    if (empty($_POST['email']) || empty($_POST['password'])){
+      $error = "Username or Password is invalid";
+    }
   }
 
   public function UserType(){
     //if user role is 1, redirect to admin page
-    if ($_SESSION["role"] == 1) {
+    if ($_SESSION["type"] == 'admin') {
       header("Location:../user/admin/");
     }
     //if user role is 0, redirect to student page
-    if ($_SESSION["role"] == 0) {
+    if ($_SESSION["type"] == 'student') {
       //header("Location:../user/student/studentSideBarMenu/adviserRating.php");
       header("Location:../user/student/");
       //header("Location:../user/student/dashboard.php");
 
     }
     //if user role is 2, redirect to faculty page
-    if ($_SESSION["role"] == 2) {
+    if ($_SESSION["type"] == 'faculty') {
       header("Location:../user/faculty/");
     }
     //if user role is 3, redirect to secretary page
-    if ($_SESSION["role"] == 3) {
+    if ($_SESSION["type"] == 'secretary') {
       header("Location:../user/secretary/");
     }
   }
   public function SessionVerify(){
-    if(isset($_SESSION['login'])){
+    if(isset($_SESSION['email'])){
       header("location: includes/checkuser.php"); // Check user session and role
     }
   }
@@ -91,19 +87,19 @@ class UserFunctions{
   }
   /*keking addition*/
   public function id(){
-    $id = $_SESSION["id"];
+    $id = $_SESSION["user_id"];
     echo $id;
   }
   public function email(){
-    $email = $_SESSION["login"];
+    $email = $_SESSION["email"];
     echo $email;
   }
   public function role(){
-    $role = $_SESSION["role"];
+    $role = $_SESSION["type"];
     echo $role;
   }
   public function password(){
-    $password = $_SESSION["password"];
+    $password = $_SESSION["userpassword"];
     echo $password;
   }
 }

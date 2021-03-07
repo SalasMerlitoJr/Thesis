@@ -21,7 +21,7 @@
             <h5 class="card-title text-center">Sign In</h5>
             <form class="form-signin" action="includes/login.php" method="POST">
               <div class="form-label-group">
-                <input name="login" type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+                <input name="email" type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
                 <label for="inputEmail">Email address</label>
               </div>
 

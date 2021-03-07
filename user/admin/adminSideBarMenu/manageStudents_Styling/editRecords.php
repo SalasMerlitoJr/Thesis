@@ -210,7 +210,7 @@
   if(isset($_POST['edit_name'])){
     $new_name = $_POST['name'];
     //$id = $_GET['edit'];              
-    $sql="UPDATE tbl_users SET name='$new_name' where id = '$id'";
+    $sql="UPDATE users_tbl SET name='$new_name' where user_id = '$id'";
     $stmt = $conn->prepare($sql);
     $stmt->execute();
     $_POST['name'];
@@ -218,14 +218,14 @@
   }
   if(isset($_POST['edit_email'])){
     $new_email = $_POST['email'];              
-    $sql="UPDATE tbl_users SET login='$new_email' where id = '$id'";
+    $sql="UPDATE users_tbl SET email='$new_email' where user_id = '$id'";
     $stmt = $conn->prepare($sql);
     $stmt->execute();
     $_POST['email'];
     $msg="Email Changed Sucessfully";
   }
 
-  $sql = "SELECT * from tbl_users where id = '$id' ";
+  $sql = "SELECT * from users_tbl where user_id = '$id' ";
   $records = mysqli_query($conn, $sql);
   while  ($row = mysqli_fetch_object($records)) {
 
@@ -233,7 +233,7 @@
 
                     <tr>
                       <td><?php echo htmlentities($row->name);?></td>
-                      <td><?php echo htmlentities($row->login);?></td>
+                      <td><?php echo htmlentities($row->email);?></td>
                       <td><?php echo htmlentities($row->section);?></td>
                       
 
@@ -274,7 +274,7 @@
                 </div>-->
 
               <div class="form-group">
-                <center> <strong style="font-size: 2em"><?php echo htmlentities($row->login); ?></strong></center>
+                <center> <strong style="font-size: 2em"><?php echo htmlentities($row->email); ?></strong></center>
                   <!-- <div class="col-sm-4">-->
                    <!--<input type="email" name="email" class="form-control" placeholder = "edit email" >
                    
@@ -338,7 +338,7 @@
                 <center>  <label class="col-sm-2 control-label">Email<span style="color:red">*</span></label></center>
                   <div class="col-sm-4">
                     <!--<input type="text" name="name" class="form-control" placeholder ="<?php // echo htmlentities($row->login); ?>" >-->
-                    <input type="email" name="email" class="form-control" placeholder ="<?php echo htmlentities($row->login); ?>" >
+                    <input type="email" name="email" class="form-control" placeholder ="<?php echo htmlentities($row->email); ?>" >
 
                   </div>
               </div>

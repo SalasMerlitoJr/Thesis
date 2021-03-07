@@ -310,12 +310,12 @@
 
               if(isset($_POST['edit_password'])){
                 $password=md5($_POST['password']);
-                $fafa=$_SESSION["login"];
-                $sql="UPDATE tbl_users SET password='$password' where login = '$fafa' and password != '$password' ";
+                $fafa=$_SESSION["email"];
+                $sql="UPDATE users_tbl SET userpassword='$password' where email = '$fafa' and userpassword != '$password' ";
                 //$sql = " password != '$password' begin UPDATE tbl_users SET password='$password' where login = '$fafa'";
                 $stmt = $conn->prepare($sql);
                 $stmt->execute();
-                $_SESSION['password'] = md5($_POST['password']);
+                $_SESSION['userpassword'] = md5($_POST['password']);
 
                 $msg="Password Changed Sucessfully";
 

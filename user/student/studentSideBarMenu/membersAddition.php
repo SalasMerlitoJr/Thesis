@@ -4,6 +4,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <!--<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">-->
+  <!--<meta name="description" content="">
+  <meta name="author" content="">
+  <meta name="theme-color" content="#3e454c">-->
 
   <script>document.getElementsByTagName("html")[0].className += " js";</script>
   <link rel="stylesheet" href="../student_assets/css/style.css">
@@ -97,7 +103,7 @@
 
         </li>
     
-        <li style="background-color:#4169E1" class="cd-side__sub-item cd-side__item cd-side__item--has-children">
+        <li class="cd-side__sub-item cd-side__item cd-side__item--has-children">
           <!--<a href="">Feature 5</a>-->
           <a href="adviserRating.php">Adviser Rating</a>
           
@@ -121,16 +127,83 @@
   
         <div class="row">
           <div class="col-md-12">
-            <center><h2 class="page-title">Adviser Rating Page</h2></center>
   <!------------------>
+	<center><h4><i>NOTE: </i>If you're the representative who is responsible for adding the members to your team, <strong>YOU MUST ADD YOURSELF AT THE LAST PART AS THE LAST MEMBER OF YOUR TEAM OR ELSE YOU CAN'T ADD ADDITIONAL MEMBER TO YOUR TEAM IF YOU ADDED YOURSELF FIRST AND IS ALREADY A MEMBER OF YOUR DESIRED TEAM.</strong></h4></center>
 
 <center>
 
 <?php
   include '../../../includes/connect.php';
+  $msg = null;
+  
+  $selected_id = $_GET['add'];
+  if(isset($_POST['set_member_role'])){
+                 
+    //update student status in users_tbl
+    $my_id = $_SESSION["user_id"];
+    $sql0="UPDATE users_tbl SET status = '$my_id' where user_id = '$selected_id'";
+    $stmt0 = $conn->prepare($sql0);
+    $stmt0->execute();
 
-//----------------------------------------------------
-  if(isset($_POST['dismember'])){
+    //insert new records in group_members_tbl
+    $my_id = $_SESSION["user_id"];
+    $team_id = $selected_id;
+    $member_role = $_POST['role'];
+    $group_member_status = $my_id;
+    $sql2="INSERT into group_members_tbl (team,member_id,role,gro_mem_status) 
+                    values ('" . $my_id . "','" . $team_id . "','" . $member_role . "','" . $group_member_status . "')";
+    $stmt2 = $conn->prepare($sql2);
+    $stmt2->execute();
+  }
+
+  $sql = "SELECT * from users_tbl where user_id = '$selected_id' ";
+  $records = mysqli_query($conn, $sql);
+  while  ($row = mysqli_fetch_object($records)) {
+?>
+
+        <?php  if($msg){?><center><?php echo htmlentities($msg); ?></center> <?php }?>
+
+        <center>    <form method="post" class="form-horizontal" enctype="multipart/form-data">
+          <div style="height: 3em"></div>
+              <center><h3>Select Role for </h3></center>
+                  <center> <strong style="font-size: 2em"><?php echo htmlentities($row->name); ?></strong></center>
+                </div>
+
+			<?php } ?>
+                <div style="height: 13em"></div>
+
+              <?php 
+                $id = $_SESSION['user_id'];
+                //$status = $_SESSION['status'];
+                $sql = "SELECT * from users_tbl where user_id = '$id' ";
+                $records = mysqli_query($conn, $sql);
+                while  ($row = mysqli_fetch_object($records)) { 
+                  if(($row->status) == 0){
+                  ?>
+
+                    <center><strong>Role</strong></center>
+
+                    <center><select id="role" name="role">
+					  <option disabled selected="">----Select Role----</option>				  
+					  <option value="Pancit Cantooner" id="" name="role">Project Leader</option>
+					  <option value="Wifi Librer" id="" name="role">Tester</option>
+					  <option value="Financer" id="" name="role">Programmer</option>
+					  <option value="Project Leader" id="" name="role">Documentation</option>
+					</center></select>
+
+                  <button name="set_member_role" type="submit">Set</button>
+                  <!--<center><button action="membersAddition.php" name="regroup" type="submit">Start Again</button></center>
+                  <center><button action="membersAddition.php" name="deleteAll" type="submit">Delete All</button></center>-->
+
+                <?php } } ?>
+
+            </form></center>
+   
+    <?php
+      include '../../../includes/connect.php';
+      $my_id = $_SESSION["user_id"];
+
+      if(isset($_POST['regroup2'])){
                  
         //update student status in users_tbl
         $my_id = $_SESSION["user_id"];
@@ -144,41 +217,52 @@
       
       }
 
-
-  if(isset($_POST['deleteAll'])){
+  if(isset($_POST['deleteAll2'])){
 
         $sql6="DELETE from group_members_tbl ";
         $stmt6 = $conn->prepare($sql6);
         $stmt6->execute();
 
-        $sql5="UPDATE users_tbl SET status = 0";
+        $my_id = $_SESSION["user_id"];
+        $sql5="UPDATE users_tbl SET status = 0 where status = '$my_id'";
         $stmt5 = $conn->prepare($sql5);
         $stmt5->execute();
       
     }
 
-    if(isset($_POST['Set_all_status_to_zero_from_user_table'])){
+      $sql = "SELECT * from group_members_tbl where member_id = '$id' limit 1";
+		  $records = mysqli_query($conn, $sql);
+		  while  ($row = mysqli_fetch_object($records)) {
+        if(($row->team) != ($my_id)){
 
-        $sql5="UPDATE users_tbl SET status = 0 where status != 0";
-        $stmt5 = $conn->prepare($sql5);
-        $stmt5->execute();
-      
+		?>
+          <center>
+            <h1>OOPS!</h1><br>
+            <h2>You're already a member in a team and that is fixed</h2></center>
+          <center><h1>You're Role is <?php echo htmlentities($row->role);  ?></h1> </center>
+          <center>  <h2>You can't add someone in your team unless you're the representative who are responsible for assigning the members to your team</h2> </center>
+    <?php  
+      }if(($row->team) == ($my_id)){
+        ?>
+          <center>
+            <h1>OOPS!</h1><br>
+            <h2>You're already a member in a team and that is fixed</h2></center>
+          <center><h1>You're Role is <?php echo htmlentities($row->role);  ?></h1> </center>
+          <center>  <h4 style="color:blue">In order for you to add additional members to your team, you need to dismember your current team and regroup to have a fixed team</h4> </center>
+          <center>  <h2>You can start regrouping again by clicking the button below</h2> </center>
+          <form method="post">
+          <center><button action="membersAddition.php" name="regroup2" type="submit">Dismember</button></center>
+          <!--<center><button action="membersAddition.php" name="deleteAll2" type="submit">Delete All</button></center>-->
+
+          </form>
+
+        <?php
+      } 
     }
-
-  //------------------------------------------------
-
-?>
-        <center><form method="post">
-                <div style="height: 5em"></div>
-
-                  <center><button action="membersAddition.php" name="dismember" type="submit">Dismember</button></center>
-                  <center><button action="membersAddition.php" name="deleteAll" type="submit">Delete All Records from group_members_tbl</button></center>
-                  <center><button action="membersAddition.php" name="Set_all_status_to_zero_from_user_table" type="submit">Set all status to zero from users_table</button></center>
-
-            </form></center>
+  ?>
                     
 
-          </div>
+  </div>
         </div>
       </div>
     </div>
@@ -198,6 +282,21 @@
   <script src="../student_js/fileinput.js"></script>
   <script src="../student_js/chartData.js"></script>
   <script src="../student_js/main.js"></script>
+
+<!--
+</form>
+</center>
+</center>
+</div>
+</div>
+</div>
+</div>
+</main>
+</li>
+</li>
+</ul>
+</header>
+-->
 
 </body>
 </html>

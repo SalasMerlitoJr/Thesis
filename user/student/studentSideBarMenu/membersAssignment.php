@@ -1,4 +1,7 @@
-<?php include 'students_SESSION.php'; ?>
+<?php include 'students_SESSION.php'; 
+
+?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -27,6 +30,9 @@
   <link rel="stylesheet" href="../student_css/bootstrap-select.css">
   <!-- Admin Stye -->
   <link rel="stylesheet" href="../student_css/style.css">
+
+  <link rel="stylesheet" href="../student_css/dataTables.bootstrap.min.css">
+  <link rel="stylesheet" href="../student_css/awesome-bootstrap-checkbox.css">
 
 </head>
 
@@ -68,7 +74,7 @@
     <nav class="cd-side-nav js-cd-side-nav">
       <ul class="cd-side__list js-cd-side__list">
         <!--<li class="cd-side__label"><span>Main</span></li>-->
-        <li class="main-label">student Page</li>
+        <li class="main-label">Student Page</li>
         <li class="main-label_dup" style="color:white; text-align: center;"><?php $ufunc->UserName();?></li>
         
 
@@ -129,6 +135,124 @@
           <div class="col-md-12">
 
             <center><h2 class="page-title">Members Assignment Page</h2></center>
+
+            <div class="panel panel-default">
+              <?php if(isset($_GET['delete'])){ if($del_prompt_messasge){?><div class="succWrap" id="msgshow"><center><?php echo htmlentities($del_prompt_messasge); ?></center> </div><?php } }?>
+              <div class="panel-heading">Choose Members</div>
+              <div class="panel-body">
+              <!--<?php  /*if($error){?><div class="errorWrap" id="msgshow"><?php echo htmlentities($error); ?> </div><?php } 
+        else if($msg){?><div class="succWrap" id="msgshow"><?php echo htmlentities($msg); ?> </div><?php } */?> -->
+
+
+                <table id="zctb" class="display table table-striped table-bordered table-hover" cellspacing="0" width="100%">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Name</th>
+                      <th>Email</th>
+                      <th>Section</th>
+                      <th>Action</th> 
+                    </tr>
+                  </thead>
+                  
+                  <tbody>
+
+<?php
+  include '../../../includes/connect.php';
+  $my_id = $_SESSION["user_id"];
+
+  /*if(isset($_POST['regroup'])){                
+    $my_id = $_SESSION["user_id"];
+    $sql5="UPDATE users_tbl SET status = 0 where status = '$my_id'";
+    $stmt5 = $conn->prepare($sql5);
+    $stmt5->execute();
+
+    $sql6="DELETE from group_members_tbl where team = '$my_id' ";
+    $stmt6 = $conn->prepare($sql6);
+    $stmt6->execute();
+      
+  }*/
+
+  $sql = "SELECT * from users_tbl where type = 'student' ";
+  $records = mysqli_query($conn, $sql);
+  while  ($row = mysqli_fetch_object($records)) {
+    if(($row->status) == 0){
+    //if(empty($row->status)){
+    //if((($row->status) == 0) or (($row->status) == 1)){
+
+?>
+
+                    <tr>
+                      <td><?php echo htmlentities($row->user_id);?></td>
+                      <td><?php echo htmlentities($row->name);?></td>
+                      <td><?php echo htmlentities($row->email);?></td>
+                      <td><?php echo htmlentities($row->section);?></td>
+                      
+<td>
+<!--<a href="edit-user.php?edit=<?php // echo $result->id;?>" onclick="return confirm('Do you want to Edit');">&nbsp; <i class="fa fa-pencil"></i></a>&nbsp;&nbsp;-->
+<a href="membersAddition.php?add=<?php echo htmlentities($row->user_id); ?>" onclick="return confirm('Do you want to add a member and set his/her role in your team?');"> Add as a Member <!--<i class="fa fa-pencil"></i>--></a>
+
+</td>
+                    </tr>
+                    <?php } } ?>
+                                       
+                    <!--<?php $cnt //  =$cnt+1; }} ?> -->
+                    
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+<div style="height: 45em"></div>
+
+<?php
+
+  include '../../../includes/connect.php';
+
+  $my_id = $_SESSION["user_id"];
+  $sql4 = "SELECT name,team from users_tbl inner join group_members_tbl on user_id = member_id where team = '$my_id' ";
+  $records4 = mysqli_query($conn, $sql4);
+  $member_count=0;
+  while  ($row4 = mysqli_fetch_object($records4)) { 
+      $member_count++; 
+
+?>
+
+                    
+                      <!--<center><h1><?php //  htmlentities($row4->group_members_id);?></h1></center>-->
+                      <center><h4 style="text-align: center;"><strong>Member </strong><?php echo $member_count.": ".$row4->name;?></h4></center>
+                    
+<center><form method="post">
+<?php }
+
+$group_id = $_SESSION["user_id"];
+
+/*if(isset($_POST['displayDeletedMember'])){
+  $my_id = $_SESSION["user_id"];
+  $sql5="UPDATE users_tbl SET status = 0 where status = '$my_id' " ;
+  $stmt5 = $conn->prepare($sql5);
+  $stmt5->execute();
+}*/
+
+$sql4 = "SELECT * from group_members_tbl where team = '$group_id' limit 1 ";
+    $records4 = mysqli_query($conn, $sql4);
+    while  ($row4 = mysqli_fetch_object($records4)) { 
+      if(($row4->team) == ($group_id)){ ?>
+
+        
+          <button name="sendTitle" type="submit" style="background-color: white; color: blue; float:justify;">Title Proposal</button>
+          <button name="displayDeletedMember" type="submit" style="background-color: white; color: blue; float:justify;">Display Deleted Member</button>
+        </form></center>
+    
+        <!--<a href="membersAssignment.php?displayDeletedMember=<?php // echo htmlentities($row->user_id); ?>" onclick="return confirm('Do you want to add a member and set his/her role in your team?');"> Add as Member</a>-->
+<?php  
+      }
+    }
+?>
+
+          
+          <!-------->
             
           </div>
         </div>

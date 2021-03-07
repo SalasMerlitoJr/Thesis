@@ -1,4 +1,18 @@
-<?php include 'admin_SESSION.php'; ?> 
+<?php include 'admin_SESSION.php'; 
+
+$importCsv_prompt_messasge = null;
+$del_prompt_messasge = null;
+
+if(isset($_GET['delete'])){
+    
+    $id = $_GET['delete'];              
+    $sql="DELETE from users_tbl where user_id = '$id'";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute();
+    $del_prompt_messasge="Deleted Successfully";
+}
+
+?> 
 
 <!DOCTYPE html>
 <html lang="en">
@@ -31,6 +45,25 @@
 
   <link rel="stylesheet" href="../admin_css/dataTables.bootstrap.min.css">
   <link rel="stylesheet" href="../admin_css/awesome-bootstrap-checkbox.css">
+
+  <style>
+    .errorWrap {
+        padding: 10px;
+        margin: 0 0 20px 0;
+      background: #dd3d36;
+      color:#fff;
+        -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+        box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+    }
+    .succWrap{
+        padding: 10px;
+        margin: 0 0 20px 0;
+      background: #5cb85c;
+      color:#fff;
+        -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+        box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+    }
+  </style>
 
 </head>
 
@@ -171,6 +204,7 @@
             <center><h2 class="page-title">Secretary Management Page</h2></center>
 
             <div class="panel panel-default">
+              <?php if(isset($_GET['delete'])){ if($del_prompt_messasge){?><div class="succWrap" id="msgshow"><center><?php echo htmlentities($del_prompt_messasge); ?></center> </div><?php } }?>
               <div class="panel-heading">Secretary List</div>
               <div class="panel-body">
               <!--<?php  /*if($error){?><div class="errorWrap" id="msgshow"><?php echo htmlentities($error); ?> </div><?php } 
@@ -200,7 +234,7 @@ foreach($results as $result)
 {     */  ?>  -->
 <?php
   include '../../../includes/connect.php';
-  $sql = "SELECT * from tbl_users where role = 3;";
+  $sql = "SELECT * from users_tbl where type = 'secretary';";
   /*$query = $dbh -> prepare($sql);
   $query->execute();
   $result=$query->fetch(PDO::FETCH_OBJ);*/
@@ -211,12 +245,12 @@ foreach($results as $result)
 ?>
 
                     <tr>
-                      <td><?php echo htmlentities($row->id);?></td>
+                      <td><?php echo htmlentities($row->user_id);?></td>
                       <!--td><img src="../images/<?php // echo htmlentities($result->image);?>" style="width:50px; border-radius:50%;"/></td>-->
                       <td><?php echo htmlentities($row->name);?></td>
-                      <td><?php echo htmlentities($row->login);?></td>
-                      <td><?php echo htmlentities($row->password);?></td>
-                      <td><?php echo htmlentities($row->role);?></td>
+                      <td><?php echo htmlentities($row->email);?></td>
+                      <td><?php echo htmlentities($row->userpassword);?></td>
+                      <td><?php echo htmlentities($row->type);?></td>
                       <!--<td><?php // echo htmlentities($result->designation);?></td>-->
                       <!--<td><?php /* if($result->status == 1)
                                                     {?>
@@ -229,9 +263,10 @@ foreach($results as $result)
                       
 <td>
 <!--<a href="edit-user.php?edit=<?php // echo $result->id;?>" onclick="return confirm('Do you want to Edit');">&nbsp; <i class="fa fa-pencil"></i></a>&nbsp;&nbsp;-->
-<a href="gg.php" onclick="return confirm('Do you want to Edit');"> edit - <!--<i class="fa fa-pencil"></i>--></a>
-<!--<a href="userlist.php?del=<?php /*echo $result->id;?>&name=<?php echo htmlentities($result->email); */?>" onclick="return confirm('Do you want to Delete');"><i class="fa fa-trash" style="color:red"></i></a>&nbsp;&nbsp;-->
-<a href="gg.php" onclick="return confirm('Do you want to Delete');"> delete<!--<i class="fa fa-trash"></i>--></a>
+<a href="manageStudents_Styling/editRecords.php?edit=<?php echo htmlentities($row->user_id); ?>" onclick="return confirm('Do you want to EDIT this?');"> edit - <!--<i class="fa fa-pencil"></i>--></a>
+
+<!--<a href="deleteStudents.php" onclick="return confirm('Do you want to Delete');"> delete --><!--<i class="fa fa-trash"></i>--> <!--</a>-->
+<a href="manageSecretary.php?delete=<?php echo htmlentities($row->user_id);  ?>" onclick="return confirm('Do you want to DELETE this?');"> delete</a>
 </td>
                     </tr>
                     <?php } ?>
@@ -268,7 +303,7 @@ foreach($results as $result)
          $(document).ready(function () {          
           setTimeout(function() {
             $('.succWrap').slideUp("slow");
-          }, 3000);
+          }, 1000);
           });
     </script>
 

@@ -18,7 +18,7 @@ if (isset($_POST['import'])) {
             if ($i > 0) {
                 if (!empty($column[0])) {
                     //$insertdate = date("Y-m-d", strtotime(str_replace('/', '-', $column[3])));
-                    $sql = "INSERT into tbl_users (name,login,password,role,section) 
+                    $sql = "INSERT into users_tbl (name,email,userpassword,type,section) 
                     values ('" . $column[0] . "','" . $column[1] . "','" . md5($column[2]) . "','" . $column[3] . "','" . $column[4] . "')";
                     $result = mysqli_query($conn, $sql);
                     if (isset($result)) {
@@ -36,7 +36,7 @@ if (isset($_POST['import'])) {
 if(isset($_GET['delete'])){
     
     $id = $_GET['delete'];              
-    $sql="DELETE from tbl_users where id = '$id'";
+    $sql="DELETE from users_tbl where user_id = '$id' and status = 1";
     $stmt = $conn->prepare($sql);
     $stmt->execute();
     $del_prompt_messasge="Deleted Successfully";
@@ -284,18 +284,20 @@ foreach($results as $result)
 {     */  ?>  -->
 <?php
   include '../../../../includes/connect.php';
-  $sql = "SELECT * from tbl_users where role = 0;";
+  //$user_type = "student";
+  $sql = "SELECT * from users_tbl where type = 'student' ";
   $records = mysqli_query($conn, $sql);
   while  ($row = mysqli_fetch_object($records)) {
+    if(($row->status) == 0){
 
 ?>
 
                     <tr>
-                      <td><?php echo htmlentities($row->id);?></td>
+                      <td><?php echo htmlentities($row->user_id);?></td>
                       <!--td><img src="../images/<?php // echo htmlentities($result->image);?>" style="width:50px; border-radius:50%;"/></td>-->
                       <td><?php echo htmlentities($row->name);?></td>
-                      <td><?php echo htmlentities($row->login);?></td>
-                      <td><?php echo htmlentities($row->password);?></td>
+                      <td><?php echo htmlentities($row->email);?></td>
+                      <td><?php echo htmlentities($row->userpassword);?></td>
                       <td><?php echo htmlentities($row->section);?></td>
                       <!--<td><?php // echo htmlentities($result->designation);?></td>-->
                       <!--<td><?php /* if($result->status == 1)
@@ -309,13 +311,39 @@ foreach($results as $result)
                       
 <td>
 <!--<a href="edit-user.php?edit=<?php // echo $result->id;?>" onclick="return confirm('Do you want to Edit');">&nbsp; <i class="fa fa-pencil"></i></a>&nbsp;&nbsp;-->
-<a href="editStudents.php?edit=<?php echo htmlentities($row->id); ?>" onclick="return confirm('Do you want to EDIT this?');"> edit - <!--<i class="fa fa-pencil"></i>--></a>
+<a href="editRecords.php?edit=<?php echo htmlentities($row->user_id); ?>" onclick="return confirm('Do you want to EDIT this?');"> edit - <!--<i class="fa fa-pencil"></i>--></a>
 
 <!--<a href="deleteStudents.php" onclick="return confirm('Do you want to Delete');"> delete --><!--<i class="fa fa-trash"></i>--> <!--</a>-->
-<a href="manageStudents_csv.php?delete=<?php echo htmlentities($row->id);  ?>" onclick="return confirm('Do you want to DELETE this?');"> delete</a>
+<a href="manageStudents_csv.php?delete=<?php echo htmlentities($row->user_id);  ?>" onclick="return confirm('Do you want to DELETE this?');"> delete</a>
 </td>
                     </tr>
-                    <?php } ?>
+                    <?php }if (($row->status) != 0) {
+                      # code...
+                    ?> 
+
+                    <tr>
+                      <td><?php echo htmlentities($row->user_id);?></td>
+                      <!--td><img src="../images/<?php // echo htmlentities($result->image);?>" style="width:50px; border-radius:50%;"/></td>-->
+                      <td><?php echo htmlentities($row->name);?></td>
+                      <td><?php echo htmlentities($row->email);?></td>
+                      <td><?php echo htmlentities($row->userpassword);?></td>
+                      <td><?php echo htmlentities($row->section);?></td>
+                      <!--<td><?php // echo htmlentities($result->designation);?></td>-->
+                      <!--<td><?php /* if($result->status == 1)
+                                                    {?>
+                                                    <a href="userlist.php?confirm=<?php  echo htmlentities($result->id);?>" onclick="return confirm('Do you really want to Disable the Account')">Enable <i class="fa fa-check-circle"></i></a> 
+                                                    <?php } else {?>
+                                                    <a href="userlist.php?unconfirm=<?php echo htmlentities($result->id);?>" onclick="return confirm('Do you really want to Enable the Account')">Disable <i class="fa fa-times-circle"></i></a>
+                                                    <?php } */ ?> 
+
+                      </td>-->
+                      
+<td>
+<!--<a href="edit-user.php?edit=<?php // echo $result->id;?>" onclick="return confirm('Do you want to Edit');">&nbsp; <i class="fa fa-pencil"></i></a>&nbsp;&nbsp;-->
+<a href="editRecords.php?edit=<?php echo htmlentities($row->user_id); ?>" onclick="return confirm('Do you want to EDIT this?');"> edit <!--<i class="fa fa-pencil"></i>--></a>
+</td>
+                    </tr>
+                  <?php } }?>
                                        
                     <!--<?php $cnt //  =$cnt+1; }} ?> -->
                     

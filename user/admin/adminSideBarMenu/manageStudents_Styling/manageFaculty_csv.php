@@ -4,7 +4,9 @@
 include '../../../../includes/connect.php';
 include 'admin_SESSION.php';
 
-$msg = 0;
+$msg = null;
+$importCsv_prompt_messasge = null;
+$del_prompt_messasge = null;
 
 // Import data code using csv
 if (isset($_POST['import'])) {
@@ -16,7 +18,7 @@ if (isset($_POST['import'])) {
             if ($i > 0) {
                 if (!empty($column[0])) {
                     //$insertdate = date("Y-m-d", strtotime(str_replace('/', '-', $column[3])));
-                    $sql = "INSERT into tbl_users (name,login,password,gender,phone,role) 
+                    $sql = "INSERT into users_tbl (name,email,userpassword,gender,phone,type) 
                     values ('" . $column[0] . "','" . $column[1] . "','" . md5($column[2]) . "','" . $column[3] . "','" . $column[4] . "','" . $column[5] . "')";
                     $result = mysqli_query($conn, $sql);
                     if (isset($result)) {
@@ -27,7 +29,18 @@ if (isset($_POST['import'])) {
             $i++;
         }
     }
+  $importCsv_prompt_messasge = "CSV is imported successfully";
 }
+
+if(isset($_GET['delete'])){
+    
+    $id = $_GET['delete'];              
+    $sql="DELETE from users_tbl where user_id = '$id'";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute();
+    $del_prompt_messasge="Deleted Successfully";
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -59,6 +72,25 @@ if (isset($_POST['import'])) {
 
   <!--<link href="csv_Import_style.css" rel="stylesheet" type="text/css"/>-->
   <link href="manageStudents_csv.css" rel="stylesheet" type="text/css"/>
+
+  <style>
+    .errorWrap {
+        padding: 10px;
+        margin: 0 0 20px 0;
+      background: #dd3d36;
+      color:#fff;
+        -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+        box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+    }
+    .succWrap{
+        padding: 10px;
+        margin: 0 0 20px 0;
+      background: #5cb85c;
+      color:#fff;
+        -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+        box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+    }
+  </style>
 
 </head>
 
@@ -220,16 +252,18 @@ if (isset($_POST['import'])) {
       <button type="submit" id="submit" name="import" class="btn-submit">IMPORT CSV</button>
     </form>
 
-
     <?php
-    if ($msg > 0) {  ?>
-        <div class="msg">CSV data us imported successfully.</div>
-    <?php
-    }
-    ?>
+    if ($importCsv_prompt_messasge) {?> 
+                                        <div class="succWrap" id="msgshow"><center>
+        <!--<div class="msg">CSV data is imported successfully.</div>-->
+                                            <?php echo htmlentities($importCsv_prompt_messasge);
+  
+    ?></center> </div><?php }?>
+    
     <div class="row" style="margin-top: 3em">
           <div class="col-md-12">
           <div class="panel panel-default">
+            <?php if(isset($_GET['delete'])){ if($del_prompt_messasge){?><div class="succWrap" id="msgshow"><center><?php echo htmlentities($del_prompt_messasge); ?></center> </div><?php } }?>
               <div class="panel-heading">Faculty List</div>
               <div class="panel-body">
               <!--<?php  /*if($error){?><div class="errorWrap" id="msgshow"><?php echo htmlentities($error); ?> </div><?php } 
@@ -260,18 +294,18 @@ foreach($results as $result)
 {     */  ?>  -->
 <?php
   include '../../../../includes/connect.php';
-  $sql = "SELECT * from tbl_users where role = 2;";
+  $sql = "SELECT * from users_tbl where type = 'faculty' ";
   $records = mysqli_query($conn, $sql);
   while  ($row = mysqli_fetch_object($records)) {
 
 ?>
 
                     <tr>
-                      <td><?php echo htmlentities($row->id);?></td>
+                      <td><?php echo htmlentities($row->user_id);?></td>
                       <!--td><img src="../images/<?php // echo htmlentities($result->image);?>" style="width:50px; border-radius:50%;"/></td>-->
                       <td><?php echo htmlentities($row->name);?></td>
-                      <td><?php echo htmlentities($row->login);?></td>
-                      <td><?php echo htmlentities($row->password);?></td>
+                      <td><?php echo htmlentities($row->email);?></td>
+                      <td><?php echo htmlentities($row->userpassword);?></td>
                       <td><?php echo htmlentities($row->gender);?></td>
                       <td><?php echo htmlentities($row->phone);?></td>
                       <!--<td><?php // echo htmlentities($result->designation);?></td>-->
@@ -286,9 +320,10 @@ foreach($results as $result)
                       
 <td>
 <!--<a href="edit-user.php?edit=<?php // echo $result->id;?>" onclick="return confirm('Do you want to Edit');">&nbsp; <i class="fa fa-pencil"></i></a>&nbsp;&nbsp;-->
-<a href="gg.php" onclick="return confirm('Do you want to Edit');"> edit - <!--<i class="fa fa-pencil"></i>--></a>
-<!--<a href="userlist.php?del=<?php /*echo $result->id;?>&name=<?php echo htmlentities($result->email); */?>" onclick="return confirm('Do you want to Delete');"><i class="fa fa-trash" style="color:red"></i></a>&nbsp;&nbsp;-->
-<a href="gg.php" onclick="return confirm('Do you want to Delete');"> delete<!--<i class="fa fa-trash"></i>--></a>
+<a href="editRecords.php?edit=<?php echo htmlentities($row->user_id); ?>" onclick="return confirm('Do you want to EDIT this?');"> edit - <!--<i class="fa fa-pencil"></i>--></a>
+
+<!--<a href="deleteStudents.php" onclick="return confirm('Do you want to Delete');"> delete --><!--<i class="fa fa-trash"></i>--> <!--</a>-->
+<a href="manageFaculty_csv.php?delete=<?php echo htmlentities($row->user_id);  ?>" onclick="return confirm('Do you want to DELETE this?');"> delete</a>
 </td>
                     </tr>
                     <?php } ?>
@@ -333,7 +368,7 @@ foreach($results as $result)
          $(document).ready(function () {          
           setTimeout(function() {
             $('.succWrap').slideUp("slow");
-          }, 3000);
+          }, 1000);
           });
     </script>
 
